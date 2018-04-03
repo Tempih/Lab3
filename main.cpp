@@ -33,15 +33,52 @@ istringstream iss(inp);
 }
 double convert(const Temperature& Temp,char scale_to){
     double Kelvins;
-    switch (Temperature.scale){
-    case 'C':Kelvins+=-273.15;
+    if(scale_to==Temp.scale){return Temp.temp;}
+    switch (Temp.scale){
+    case 'K':
+    case 'k':
+        Kelvins=Temp.temp;
     break;
-    case 'F':Kelvins=((9.0/5)*(Temperature.temp-273)+32);
+    case 'C':
+    case 'c':Kelvins+=-273.15;
+    break;
+    case 'F':
+    case 'f':
+        Kelvins=(5*(Temp.temp-32))/9+273.15;
 break;
-    }}
-
+    };
+scale_to=Temp.scale;
+    switch (scale_to){
+    case 'K':
+    case 'k':
+        return Kelvins;
+    case 'C':
+    case 'c':
+        return Kelvins+=-273.15;
+    case 'F':
+    case 'f':
+        return Kelvins=((9.0/5)*(Temp.temp-273)+32);
+}}
+    bool operator < (const Temperature & lhs,const Temperature& rhs){
+    return convert(lhs,'K')< convert(rhs,'K');
+    }
+Temperature operator - (const Temperature & lhs,const Temperature & rhs )
+{
+    Temperature ret_temp;
+    ret_temp.temp=convert(lhs,'K')-convert(rhs,'K');
+ret_temp.scale='K';
+    return ret_temp;
+}
+Temperature operator / ( const Temperature & lhs,const Temperature & rhs)
+{
+    Temperature ret_temp;
+    ret_temp.temp=convert(lhs,'K')/convert(rhs,'K');
+    ret_temp.scale='K';
+    return ret_temp;
+}
 int main() {
     test_temperature_input();
-    /* Гистограмма */
-return 0;
+
+
+    return 0;
 }
